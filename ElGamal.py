@@ -1,25 +1,22 @@
-# def decrypt(num):
-#     """
-#     Decrypts a number to the original word.
-#     """
-#     # Define a dictionary to map numbers to letters
-#     letters = {i: chr(i+65) for i in range(26)}
+import textwrap
 
-#     # Calculate the letters
-#     c = num % 26
-#     num //= 26
-#     b = num % 26
-#     num //= 26
-#     a = num % 26
+def get_word_from_num(num):
+    """
+    Decrypts a number to the original word.
+    """
+    # Define a dictionary to map numbers to letters
+    letters = {i: chr(i+97) for i in range(26)}
 
-#     # Convert the letters to the original word
-#     word = letters[a] + letters[b] + letters[c]
-#     return word
+    # Calculate the letters
+    c = num % 26
+    num //= 26
+    b = num % 26
+    num //= 26
+    a = num % 26
 
-# # Example usage:
-# num = 12354
-# word = decrypt(num)
-# print(word)
+    # Convert the letters to the original word
+    word = letters[a] + letters[b] + letters[c]
+    return word
 
 def mod_inv(x, p):
     """
@@ -46,10 +43,18 @@ def calc_mod(y1, y2, a, p):
     y1_a_inv = mod_inv(mod_exp(y1, a, p), p)
     return (y2 * y1_a_inv) % p
 
-y1 = 3781
-y2 = 14409
+with open('ciphertext.txt', 'r') as file:
+    ciphertext = file.read()
+
 a = 7899
 p = 31847
+plaintext = ""
+for cipher in ciphertext.split('\n'):
+    y1, y2 = map(int, cipher.split())
+    result = calc_mod(y1, y2, a, p)
+    plaintext += get_word_from_num(result)
 
-result = calc_mod(y1, y2, a, p)
-print(f"Result: {result}")
+plaintext = textwrap.fill(plaintext, width=70)
+file = open("plaintext.txt", "w")
+file.write(plaintext)
+file.close()
