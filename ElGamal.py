@@ -60,3 +60,4 @@ def decrypt_ElGamal():
     file.close()
 
 decrypt_ElGamal()
+print("Plaintext has been outputted to the file 'plaintext.txt'")
